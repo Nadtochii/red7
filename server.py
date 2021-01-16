@@ -86,7 +86,7 @@ def threaded_client(conn, player_id):
                         print(f"Game {data} does not exist")
                     else:
                         if game.get_players() >= 4:
-                            print('full room')
+                            send(conn, {'msg': 'full room'})
                         else:
                             print(f'Try to connect to game {game_id}')
                             for p in game.players:
@@ -95,8 +95,22 @@ def threaded_client(conn, player_id):
 
                             games[game_id].join_game(player)
                             player_ids = [p.id for p in games[game_id].players]
-                            data = {'msg': 'join', 'players': player_ids}
+                            data = {'msg': 'join', 'players': player_ids, 'game_id': game_id}
                             send(conn, data)
+
+                if msg == 'drop':
+                    print('back')
+                    game_id = int(data['game_id'])
+                    game = games.get(game_id)
+                    if not game:
+                        print(f"Game {data} does not exist")
+                    else:
+                        game.players.remove(player)
+                        data = {'msg': 'lobby', 'game_ids': list(games.keys())}
+                        send(conn, data)
+                        for p in game.players:
+                            data = {'msg': 'drop', 'game': game_id, 'player': player.id}
+                            send(p.conn, data)
 
                 if msg == 'play':
                     game_id = int(data['game_id'])
