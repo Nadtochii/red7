@@ -191,6 +191,7 @@ def lose(body, server):
         return
 
     del game.players[server.player.id]
+    game.order.remove(server.player.id)
 
     if len(game.players) == 1:
         data = {'msg': 'win', 'winner_id': game.players[0].id}
