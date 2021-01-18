@@ -2,7 +2,7 @@ import pygame
 import pygame_gui
 
 from network import Network
-from screen import StartScreen
+from screens.screen_start import ScreenStart
 
 pygame.init()
 
@@ -19,7 +19,7 @@ background.fill(pygame.Color(white))
 class Application:
 
     current_screen = None
-    startup_screen = StartScreen
+    startup_screen = ScreenStart
 
     def __init__(self, window, manager, network):
         self.window = window
